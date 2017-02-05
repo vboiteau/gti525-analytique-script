@@ -1,0 +1,38 @@
+{
+  "name": "gti525-analytique-script",
+  "version": "0.0.0",
+  "description": "Code source pour le script d'analyse",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vboiteau/gti525-analytique-script.git"
+  },
+  "keywords": [
+    "analytique",
+    "frontend"
+  ],
+  "author": "Vincent Boiteau-Robert <vboiteau>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vboiteau/gti525-analytique-script/issues"
+  },
+  "homepage": "https://github.com/vboiteau/gti525-analytique-script#readme",
+  "dependencies": {
+    "babel-preset-es2015": "^6.22.0",
+    "babelify": "^7.3.0",
+    "browser-sync": "^2.18.7",
+    "browserify": "^14.0.0",
+    "chalk": "^1.1.3",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.4.0",
+    "gulp-uglify": "^2.0.1",
+    "gutil": "^1.6.4",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.9.0"
+  }
+}
