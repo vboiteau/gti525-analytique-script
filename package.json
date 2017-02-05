@@ -1,6 +1,6 @@
 {
   "name": "gti525-analytique-script",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Code source pour le script d'analyse",
   "main": "index.js",
   "scripts": {
