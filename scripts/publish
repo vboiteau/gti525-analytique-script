@@ -1,10 +1,10 @@
 #!/bin/bash
 branch=$(git rev-parse --abbrev-ref HEAD)
-if [[ $branch != "develop" ]]; then
-    echo "not on develop"
-    exit 1
-fi
 project_home=$(git rev-parse --show-toplevel)
 mkdir -p $project_home/builds;tar -C $project_home/dist/js -cvzf $project_home/builds/analytique.tar.gz .;scp $project_home/builds/analytique.tar.gz vboiteau:frontendGTI525/app/js/.;ssh vboiteau "cd frontendGTI525/app/js;tar -xzf analytique.tar.gz;rm analytique.tar.gz";rm $project_home/builds/analytique.tar.gz
+if [[ $branch != "master" ]]; then
+    echo "not patching since not on master"
+    exit 1
+fi
 npm version patch
 git push
