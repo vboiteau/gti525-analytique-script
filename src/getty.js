@@ -23,7 +23,7 @@ var call = function (url, args) {
         client.open('GET', url);
         if (args) {
             client.setRequestHeader('Content-Type', 'application/json');
-            client.setRequestHeader('Api-Key', 'jzbj86qfcpc8my4eebw7g6gw');
+            client.setRequestHeader('Api-Key', require('./../credentials').getty_key);
         }
         client.send(args);
     }).catch((err) => {

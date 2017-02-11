@@ -56,5 +56,6 @@ jspm_packages
 # dotenv environment variables file
 .env
 dist
+credentials.json
 
 # End of https://www.gitignore.io/api/nodescripts/publish
