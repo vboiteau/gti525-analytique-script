@@ -5,6 +5,7 @@ var babelify = require ('babelify'),
     chalk = require ('chalk'),
     gulp = require ('gulp'),
     gutil = require ('gutil'),
+    jshint = require ('gulp-jshint'),
     rename = require ('gulp-rename'),
     source = require ('vinyl-source-stream'),
     sourcemaps = require('gulp-sourcemaps'),
@@ -63,11 +64,17 @@ gulp.task('html', () => {
         .pipe(browserSync.stream({once:true}));
 });
 
+gulp.task('lint',()=>{
+    gulp.src('src/**/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'));
+});
+
 gulp.task('toggle-watching', () => {
     watching = true;
 });
 
-gulp.task('watch', ['html', 'toggle-watching', 'js'], () => {
+gulp.task('watch', ['html', 'toggle-watching', 'lint', 'js'], () => {
     browserSync.init({
         ui: {
             port: 7080
@@ -81,6 +88,7 @@ gulp.task('watch', ['html', 'toggle-watching', 'js'], () => {
     bundler.on('update', ()=>{
         bundle_js('analytique.min.js');
     });
-    gulp.watch(['src**/*.html'], ['html']);
+    gulp.watch(['src/**/*.html'], ['html']);
+    gulp.watch('src/**/*.js',['lint']);
 });
 

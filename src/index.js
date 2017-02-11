@@ -1,4 +1,6 @@
 'use strict';
+window.Handlebars = require ('hbsfy/runtime');
+var getty = require ('./getty');
 var ANALYTIQUE = () => {
     var adManagedCounter = 1;
     function detect_ads () {
@@ -11,17 +13,23 @@ var ANALYTIQUE = () => {
         }
         console.debug(`${adsNotDetectedYet.length} ads are detected but not managed yet.`);
 
-    };
-    var scriptTag = document.querySelector('script[src*="analytique"][campain]');
-    var campainId = scriptTag.getAttribute("campain");
+    }
+    /* Will be used for api calls */
+    // var scriptTag = document.querySelector('script[src*="analytique"][campain]');
+    // var campainId = scriptTag.getAttribute("campain");
     var domChange = 0;
     var timeout = null;
+
+    getty.search('maserati').then((json) => {
+        console.dir(json);
+    });
+
     window.onload = () => {
         detect_ads();
-        document.body.addEventListener('DOMSubtreeModified', (e) => {
+        document.body.addEventListener('DOMSubtreeModified', () => {
             domChange++;
             if (!timeout) {
-               var timeout = setTimeout(()=>{
+               timeout = setTimeout(()=>{
                    timeout = null;
                    detect_ads();
                },100); 
