@@ -1,5 +1,4 @@
 'use strict';
-window.Handlebars = require ('hbsfy/runtime');
 var getty = require ('./getty');
 //var api = require ('./api');
 var Ad = require ('./Ad');
