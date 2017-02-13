@@ -1,7 +1,7 @@
 #!/bin/bash
 branch=$(git rev-parse --abbrev-ref HEAD)
 project_home=$(git rev-parse --show-toplevel)
-mkdir -p $project_home/builds;tar -C $project_home/dist/js -cvzf $project_home/builds/analytique.tar.gz .;scp $project_home/builds/analytique.tar.gz vboiteau:frontendGTI525/app/js/.;ssh vboiteau "cd frontendGTI525/app/js;tar -xzf analytique.tar.gz;rm analytique.tar.gz";rm $project_home/builds/analytique.tar.gz
+mkdir -p $project_home/builds; scp $project_home/dist/js/analytique.min.js vboiteau:frontendGTI525/app/js/.
 if [[ $branch != "master" ]]; then
     echo "not patching since not on master"
     exit 1

@@ -16,9 +16,20 @@ var ANALYTIQUE = () => {
         for (var i = 0, len = adsNotDetectedYet.length; i < len; i++) {
             var ad = adsNotDetectedYet[i];
             ad.setAttribute("ad_id",adManagedCounter);
-            defaultLoad(ad, (imgEl) => {
-                Ads.push(new Ad(imgEl.parentElement));
-            });
+            if(ad.hasAttribute('prst')) {
+                var prst = ad.getAttribute('prst');
+                prstLoad(ad, prst, (imgEl) => {
+                    Ads.push(new Ad(imgEl.parentElement));
+                });
+            } else if (ad.hasAttribute("width") && ad.hasAttribute("height")) {
+                cstmLoad(ad, parseInt(ad.getAttribute("width")), parseInt(ad.getAttribute("height")), (imgEl) => {
+                    Ads.push(new Ad(imgEl.parentElement));
+                });
+            } else {
+                defaultLoad(ad, (imgEl) => {
+                    Ads.push(new Ad(imgEl.parentElement));
+                });
+            }
             adManagedCounter++;
         }
         ANALYTIQUE.viewPortAds();
@@ -28,6 +39,9 @@ var ANALYTIQUE = () => {
     if (scriptTag) {
         persisted.campainId = scriptTag.getAttribute("campain");
     }
+    
+    defineViewPortSize();
+
     var domChange = 0;
     var timeout = null;
 
@@ -46,9 +60,17 @@ var ANALYTIQUE = () => {
     };
 };
 
+function defineViewPortSize () {
+    persisted.viewport = {
+        width : window.innerWidth || document.documentElement.clientWidth,
+        height: window.innerHeight || document.documentElement.clientHeight
+    };
+    persisted.userAgent = window.navigator.userAgent;
+}
+
 var imagesHaystack = [];
 
-getty.search('computer').then((json) => {
+getty.search('pizza', (json) => {
     imagesHaystack = json.images;
 });
 
@@ -56,6 +78,47 @@ function defaultLoad (adEl, cb) {
     var json = imagesHaystack[Math.floor(Math.random()*imagesHaystack.length)];
     loadImg(adEl, json, cb);
 }
+
+var prstAspectRatio = {
+    'square': 1/1,
+    'landscape': 4/3,
+    'portrait': 3/4,
+    'banner': 3/1,
+    'column': 1/3
+};
+
+function prstLoad (adEl, prst, cb) {
+    var json = getBestForAspect(prstAspectRatio[prst]);
+    loadImg(adEl, json, cb);
+}
+
+function cstmLoad(adEl, width, height, cb) {
+    var json = getBestForAspect(width/height);
+    loadImg(adEl, json, (imgEl)=>{
+        imgEl.width = width;
+        imgEl.height = height;
+        cb(imgEl);
+    });
+}
+
+function getBestForAspect (aspect) {
+    var best = 9999;
+    var json = {};
+    for (var i = 0, len = imagesHaystack.length; i < len; i++) {
+        var cursor = imagesHaystack[i];
+        var diff = Math.abs(aspect-cursor.max_dimensions.width/cursor.max_dimensions.height);
+        if (best>diff) {
+            best = diff;
+            for (var prop in cursor){
+                if (cursor.hasOwnProperty(prop)) {
+                   json[prop] = cursor[prop]; 
+                }
+            }
+        }
+    }
+    return json;
+
+};
 
 function loadImg (adEl, json, cb) {
     var imgEl = document.createElement('img');
@@ -76,6 +139,8 @@ window.onbeforeunload = () => {
         ad.stopTimer();
         return ad.print();
     });
+    console.log(persisted);
+    return true;
 };
 
 ANALYTIQUE.viewPortAds = () => {
@@ -89,7 +154,7 @@ window.onscroll = ANALYTIQUE.viewPortAds;
 ANALYTIQUE.searchImages = (event) => {
     var input = event.currentTarget;
     input.disabled = true;
-    getty.search(event.currentTarget.value).then((json) => {
+    getty.search(event.currentTarget.value, (json) => {
         var imgContainer = document.querySelector('#gettys .container');
         imgContainer.innerHTML = '';
         var count = 0;
