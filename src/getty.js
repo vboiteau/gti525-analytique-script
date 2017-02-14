@@ -27,7 +27,7 @@ var call = function (url, args, cb, errCb) {
     client.send(args);
 };
 
-exports.search = function(phrase, cb, errCb){
+exports.search = function(phrase, cb){
     var url = `https://api.gettyimages.com/v3/search/images/editorial?phrase=${phrase}&minimum_size=medium&exclude_nudity=true&fields=comp%2Cmax_dimensions&page_size=100`;
     call(url, {}, cb, function(){
         console.log("error");

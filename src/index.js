@@ -16,9 +16,15 @@ var ANALYTIQUE = () => {
         for (var i = 0, len = adsNotDetectedYet.length; i < len; i++) {
             var ad = adsNotDetectedYet[i];
             ad.setAttribute("ad_id",adManagedCounter);
-            if(ad.hasAttribute('prst')) {
-                var prst = ad.getAttribute('prst');
+            var prst = getPreset(ad);
+            if(prst) {
                 prstLoad(ad, prst, (imgEl) => {
+                    if (imgEl.parentElement.hasAttribute("width")) {
+                        imgEl.width = imgEl.parentElement.getAttribute('width');
+                    }
+                    if (imgEl.parentElement.hasAttribute("height")) {
+                        imgEl.height = imgEl.parentElement.getAttribute("height");
+                    }
                     Ads.push(new Ad(imgEl.parentElement));
                 });
             } else if (ad.hasAttribute("width") && ad.hasAttribute("height")) {
@@ -59,6 +65,17 @@ var ANALYTIQUE = () => {
         });
     };
 };
+
+function getPreset (adEl) {
+    console.log(adEl);
+    var classes = adEl.classList;
+    for (var i = 0, len = classes.length; i < len; i++) {
+       if (classes[i].startsWith('ad-preset-')) {
+           return classes[i].substr(10);
+       } 
+    }
+    return null;
+}
 
 function defineViewPortSize () {
     persisted.viewport = {
@@ -117,8 +134,8 @@ function getBestForAspect (aspect) {
         }
     }
     return json;
+}
 
-};
 
 function loadImg (adEl, json, cb) {
     var imgEl = document.createElement('img');
