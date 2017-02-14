@@ -1,6 +1,6 @@
 'use strict';
 var getty = require ('./getty');
-//var api = require ('./api');
+var api = require ('./api');
 var Ad = require ('./Ad');
 var persisted = {};
 var Ads = [];
@@ -139,8 +139,7 @@ window.onbeforeunload = () => {
         ad.stopTimer();
         return ad.print();
     });
-    console.log(persisted);
-    return true;
+    api.pushInfo(persisted);
 };
 
 ANALYTIQUE.viewPortAds = () => {

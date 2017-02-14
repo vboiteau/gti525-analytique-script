@@ -1,5 +1,5 @@
 'use strict';
-var base = 'http://localhost:3000';
+var base = 'https://glacial-savannah-43843.herokuapp.com';
 var call = function (method, route, headers, body) {
     var promise = new Promise (function (resolve, reject){
         var client = new XMLHttpRequest();
@@ -36,6 +36,6 @@ var call = function (method, route, headers, body) {
 };
 
 exports.pushInfo = (json) => {
-    var route = '/receive_info';
+    var route = '/infos';
     return call('POST', route, {}, json);
 };
