@@ -41,9 +41,16 @@ var ANALYTIQUE = () => {
         ANALYTIQUE.viewPortAds();
     }
     /* Will be used for api calls */
-    var scriptTag = document.querySelector('script[src*="analytique"][campain]');
+    var scriptTag = document.querySelector('script[src*="analytique"]');
     if (scriptTag) {
         persisted.campainId = scriptTag.getAttribute("campain");
+        if (!persisted.campainId) {
+            persisted.campainId = scriptTag.getAttribute("data-campain");
+        }
+        persisted.AppId = scriptTag.getAttribute('APPID');
+        if (!persisted.AppId) {
+            persisted.AppId = scriptTag.getAttribute('data-APPID');
+        }
     }
     
     defineViewPortSize();
@@ -157,6 +164,8 @@ window.onbeforeunload = () => {
         return ad.print();
     });
     api.pushInfo(persisted);
+    console.log(persisted);
+    return true;
 };
 
 ANALYTIQUE.viewPortAds = () => {

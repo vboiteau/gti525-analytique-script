@@ -51,7 +51,7 @@ function bundle_js(src) {
 var bundler = null, wBundler = null;
 var watching = false;
 gulp.task('js', () => {
-    bundler = browserify('./src/',Object.assign({debug: true},(watching?watchify.args:{}))).transform(babelify, {presets: ['es2015']});
+    bundler = browserify(null,Object.assign({entries: ['./node_modules/babel-polyfill','src/index.js'],debug: true},(watching?watchify.args:{}))).transform(babelify, {presets: ['es2015']});
     if (watching) {
         wBundler = watchify(bundler);
     }
