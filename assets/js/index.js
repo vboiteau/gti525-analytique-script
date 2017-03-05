@@ -8,7 +8,6 @@ if (!global._babelPolyfill && !window._babelPolyfill) {
     require('babel-polyfill');
 }
 var ANALYTIQUE = () => {
-    var adManagedCounter = 1;
     var interval = null;
     function detect_ads () {
         if (imagesHaystack[0]===undefined) {
@@ -22,51 +21,45 @@ var ANALYTIQUE = () => {
             },2000);
         }
         var adsNotDetectedYet = document.querySelectorAll('.gti525Ad:not([ad_id])');
+        var promises = [];
         for (var i = 0, len = adsNotDetectedYet.length; i < len; i++) {
-            var ad = adsNotDetectedYet[i];
-            ad.setAttribute("ad_id",adManagedCounter);
-            var prst = getPreset(ad);
-            if(prst) {
-                prstLoad(ad, prst, (imgEl) => {
-                    if (imgEl.parentElement.hasAttribute("width")) {
-                        imgEl.width = imgEl.parentElement.getAttribute('width');
-                    }
-                    if (imgEl.parentElement.hasAttribute("height")) {
-                        imgEl.height = imgEl.parentElement.getAttribute("height");
-                    }
-                    Ads.push(new Ad(imgEl.parentElement));
-                });
-            } else if (ad.hasAttribute("width") && ad.hasAttribute("height")) {
-                cstmLoad(ad, parseInt(ad.getAttribute("width")), parseInt(ad.getAttribute("height")), (imgEl) => {
-                    Ads.push(new Ad(imgEl.parentElement));
-                });
-            } else {
-                defaultLoad(ad, (imgEl) => {
-                    Ads.push(new Ad(imgEl.parentElement));
-                });
-            }
-            adManagedCounter++;
+            promises.push(api.get('visitor_ad'));
         }
+        Promise.all(promises).then((adsDoc) => {
+            for (var i = 0, len = adsDoc.length; i < len; i++) {
+                var ad = adsNotDetectedYet[i];
+                ad.setAttribute("ad_id", adsDoc[i].ad.id);
+                ad.setAttribute("ad_url", adsDoc[i].ad.url);
+                ad.setAttribute("ad_is_targeted", adsDoc[i].targeted);
+                var prst = getPreset(ad);
+                if(prst) {
+                    prstLoad(ad, prst, (imgEl) => {
+                        if (imgEl.parentElement.hasAttribute("width")) {
+                            imgEl.width = imgEl.parentElement.getAttribute('width');
+                        }
+                        if (imgEl.parentElement.hasAttribute("height")) {
+                            imgEl.height = imgEl.parentElement.getAttribute("height");
+                        }
+                        Ads.push(new Ad(imgEl.parentElement));
+                    });
+                } else if (ad.hasAttribute("width") && ad.hasAttribute("height")) {
+                    cstmLoad(ad, parseInt(ad.getAttribute("width")), parseInt(ad.getAttribute("height")), (imgEl) => {
+                        Ads.push(new Ad(imgEl.parentElement));
+                    });
+                } else {
+                    defaultLoad(ad, (imgEl) => {
+                        Ads.push(new Ad(imgEl.parentElement));
+                    });
+                }
+            }
+        });
         ANALYTIQUE.viewPortAds();
     }
-    /* Will be used for api calls */
-    var scriptTag = document.querySelector('script[src*="analytique"]');
-    if (scriptTag) {
-        persisted.campainId = scriptTag.getAttribute("campain");
-        if (!persisted.campainId) {
-            persisted.campainId = scriptTag.getAttribute("data-campain");
-        }
-        persisted.AppId = scriptTag.getAttribute('APPID');
-        if (!persisted.AppId) {
-            persisted.AppId = scriptTag.getAttribute('data-APPID');
-        }
-    }
-    
+
     defineViewPortSize();
 
     var domChange = 0;
     var timeout = null;
-
     window.onload = () => {
         ANALYTIQUE.pageOpen = Date.now();
         detect_ads();
@@ -178,6 +171,7 @@ function updateInfo () {
 }
 
 ANALYTIQUE.viewPortAds = () => {
+    console.dir(Ads);
     Ads.forEach((Ad) => {
         Ad.isVisible();
     });
