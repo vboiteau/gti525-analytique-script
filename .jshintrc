@@ -15,7 +15,9 @@
     },
     "iterator": true,
     "predef": [
+        "APP",
       "Handlebars",
+    "log",
       "Promise",
       "d3",
       "fabric",

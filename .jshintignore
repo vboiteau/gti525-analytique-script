@@ -1,0 +1,7 @@
+node_modules/**/*
+.git/**/*
+test/reports/**/*
+public/**/*
+dist/**/*
+assets/js/templates.js
+assets/js/vendor

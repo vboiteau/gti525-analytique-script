@@ -37,5 +37,8 @@ var call = function (method, route, headers, body) {
 
 exports.pushInfo = (json) => {
     var route = '/infos';
-    return call('POST', route, {}, json);
+    if (json.id !== undefined) {
+        route+=`/${json.id}`;
+    }
+    return call(json.id!==undefined?'PUT':'POST', route, {}, json);
 };

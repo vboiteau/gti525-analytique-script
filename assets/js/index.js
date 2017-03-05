@@ -4,13 +4,22 @@ var api = require ('./api');
 var Ad = require ('./Ad');
 var persisted = {};
 var Ads = [];
+if (!global._babelPolyfill && !window._babelPolyfill) {
+    require('babel-polyfill');
+}
 var ANALYTIQUE = () => {
     var adManagedCounter = 1;
+    var interval = null;
     function detect_ads () {
         if (imagesHaystack[0]===undefined) {
             return setTimeout(() => {
                 detect_ads();
             }, 100);
+        }
+        if (!interval) {
+            setInterval(function(){
+                updateInfo();
+            },2000);
         }
         var adsNotDetectedYet = document.querySelectorAll('.gti525Ad:not([ad_id])');
         for (var i = 0, len = adsNotDetectedYet.length; i < len; i++) {
@@ -155,7 +164,7 @@ function loadImg (adEl, json, cb) {
     };
 }
 
-window.onbeforeunload = () => {
+function updateInfo () {
     ANALYTIQUE.pageClose = Date.now();
     var duration = ANALYTIQUE.pageClose - ANALYTIQUE.pageOpen;
     persisted.duration = duration;
@@ -163,10 +172,10 @@ window.onbeforeunload = () => {
         ad.stopTimer();
         return ad.print();
     });
-    api.pushInfo(persisted);
-    console.log(persisted);
-    return true;
-};
+    //api.pushInfo(persisted).then(function(json){
+        //persisted.id = json.persisted;
+    //});
+}
 
 ANALYTIQUE.viewPortAds = () => {
     Ads.forEach((Ad) => {
