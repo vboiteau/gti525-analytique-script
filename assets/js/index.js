@@ -5,17 +5,11 @@ var Ad = require ('./Ad');
 var persisted = {};
 var Ads = [];
 var ANALYTIQUE = () => {
-    var interval = null;
     function detect_ads () {
         if (imagesHaystack[0]===undefined) {
             return setTimeout(() => {
                 detect_ads();
             }, 100);
-        }
-        if (!interval) {
-            setInterval(function(){
-                updateInfo();
-            },2000);
         }
         var adsNotDetectedYet = document.querySelectorAll('.gti525Ad:not([ad_id])');
         var promises = [];
@@ -152,19 +146,6 @@ function loadImg (adEl, json, cb) {
             cb(e.currentTarget);
         }
     };
-}
-
-function updateInfo () {
-    ANALYTIQUE.pageClose = Date.now();
-    var duration = ANALYTIQUE.pageClose - ANALYTIQUE.pageOpen;
-    persisted.duration = duration;
-    persisted.ads = Ads.map((ad) => {
-        ad.stopTimer();
-        return ad.print();
-    });
-    //api.pushInfo(persisted).then(function(json){
-        //persisted.id = json.persisted;
-    //});
 }
 
 ANALYTIQUE.viewPortAds = () => {

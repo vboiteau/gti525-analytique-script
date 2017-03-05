@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "browsersync": "browser-sync start --server --serveStatic='dist' --files='dist' --delay 250 --no-open --port 8040 --ui-port 8070 --no-notify",
-    "browserify": "mkdir -p dist/js && npm run hbs && browserify assets/js/indes.js -d -o dist/js/analytique.min.js -t [ babelify --presets [ es2015 ] ]",
+    "browserify": "mkdir -p dist/js && browserify assets/js/index.js -d -o dist/js/analytique.min.js -t [ babelify --presets [ es2015 ] ]",
     "dev": "concurrently --kill-others \"npm run watch:html\" \"npm test -- --watch\" \"npm run watchify\" \"npm run browsersync\"",
     "html": "cp assets/index.html dist/index.html",
     "test": "mocha",
