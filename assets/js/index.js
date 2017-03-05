@@ -4,9 +4,6 @@ var api = require ('./api');
 var Ad = require ('./Ad');
 var persisted = {};
 var Ads = [];
-if (!global._babelPolyfill && !window._babelPolyfill) {
-    require('babel-polyfill');
-}
 var ANALYTIQUE = () => {
     var interval = null;
     function detect_ads () {
