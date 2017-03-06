@@ -33,7 +33,6 @@ var call = function (method, route, headers, body) {
                         reject(json);
                     }
                 } catch (e) {
-                    console.log(this);
                     reject({});
                 }
             }

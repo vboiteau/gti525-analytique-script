@@ -54,6 +54,7 @@ var ANALYTIQUE = () => {
     window.onload = () => {
         ANALYTIQUE.pageOpen = Date.now();
         detect_ads();
+        api.post("infos",{data:"{}"});
         document.body.addEventListener('DOMSubtreeModified', () => {
             domChange++;
             if (!timeout) {
@@ -67,7 +68,6 @@ var ANALYTIQUE = () => {
 };
 
 function getPreset (adEl) {
-    console.log(adEl);
     var classes = adEl.classList;
     for (var i = 0, len = classes.length; i < len; i++) {
        if (classes[i].startsWith('ad-preset-')) {
@@ -149,7 +149,6 @@ function loadImg (adEl, json, cb) {
 }
 
 ANALYTIQUE.viewPortAds = () => {
-    console.dir(Ads);
     Ads.forEach((Ad) => {
         Ad.isVisible();
     });
