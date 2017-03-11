@@ -22,9 +22,7 @@ var ANALYTIQUE = () => {
                 if(prst) {
                     src = src.replace('square', prst);
                 }
-                loadImg(ad, src, function(img) {
-                    Ads.push(new Ad(img.parentElement));
-                });
+                Ads.push(new Ad(ad, src));
             }
         });
         ANALYTIQUE.viewPortAds();
@@ -66,17 +64,6 @@ function defineViewPortSize () {
         height: window.innerHeight || document.documentElement.clientHeight
     };
     persisted.userAgent = window.navigator.userAgent;
-}
-
-function loadImg (adEl, src, cb) {
-    var imgEl = document.createElement('img');
-    imgEl.src = src;
-    imgEl.onload = (e) => {
-        adEl.appendChild(e.currentTarget);
-        if (cb !== undefined) {
-            cb(e.currentTarget);
-        }
-    };
 }
 
 ANALYTIQUE.viewPortAds = () => {
