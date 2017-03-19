@@ -17,12 +17,11 @@ var ANALYTIQUE = () => {
                 ad.setAttribute("ad_url", adsDoc[i].ad.url);
                 ad.setAttribute("ad_is_targeted", adsDoc[i].targeted);
                 let src = adsDoc[i].ad.image;
-                console.debug(src, adsDoc[i]);
                 var prst = getPreset(ad);
                 if(prst) {
                     src = src.replace('square', prst);
                 }
-                Ads.push(new Ad(ad, src));
+                Ads.push(new Ad(ad, src, prst));
             }
         });
         ANALYTIQUE.viewPortAds();
